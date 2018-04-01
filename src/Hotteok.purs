@@ -6,7 +6,7 @@ import Type.Prelude (class RowToList, SProxy)
 import Type.Row (Cons, Nil)
 import Unsafe.Coerce (unsafeCoerce)
 
-data JSUnion (members :: # Type) = JSUnion
+data JSUnion (members :: # Type)
 
 newtype UnsafeGuardFor (name :: Symbol) ty =
   UnsafeGuardFor (Foreign -> Boolean)

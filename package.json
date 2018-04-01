@@ -1,0 +1,25 @@
+{
+  "name": "purescript-hotteok",
+  "version": "1.0.0",
+  "description": "straight trash",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/justinwoo/purescript-hotteok.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/justinwoo/purescript-hotteok/issues"
+  },
+  "homepage": "https://github.com/justinwoo/purescript-hotteok#readme",
+  "devDependencies": {
+    "chalk": "^2.3.2"
+  }
+}

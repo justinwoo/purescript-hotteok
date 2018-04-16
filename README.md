@@ -39,6 +39,39 @@ $ isRight
           Assert.equal value "banana"
 ```
 
+### Matching on union members, with a Nothing returned for no matches
+
+```hs
+-- ...
+    T.test "matchMembers 1" do
+      let
+        (union :: TestUnion) = H.fromMember countP 1
+        match = H.matchJSUnion
+          { count: Tuple countGuard show
+          , name: Tuple nameGuard id
+          }
+          union
+      case match of
+        Just value -> do
+          Assert.equal value "1"
+        Nothing ->
+          T.failure "incorrect result from matchJSUnion"
+
+    T.test "matchMembers 2" do
+      let
+        (union :: TestUnion) = unsafeCoerce { crap: "some bullshit from JS" }
+        match = H.matchJSUnion
+          { count: Tuple countGuard show
+          , name: Tuple nameGuard id
+          }
+          union
+      case match of
+        Just value -> do
+          T.failure "incorrect result from matchJSUnion"
+        Nothing ->
+          T.success
+```
+
 ### Using Chalk.js properties as both functions and objects
 
 ```hs

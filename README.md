@@ -6,6 +6,14 @@ A thing for working with JSUnions by guarding members and otherwise creating and
 
 See [the tests](test/Main.purs) for all of the examples.
 
+### Further Reading
+
+You may be interested in reading my blog posts accompanying this library explaining some motivations and methods for implemenation:
+
+* Matching on JS Union members with Row Types (Handling JS Unions cont.): <https://qiita.com/kimagure/items/7a0d1675522c09b4bcb6>
+
+* Handling JS Unions with Row Types: <https://qiita.com/kimagure/items/141423771ad1f5a84425>
+
 ## Examples:
 
 ### Guarding a two-member union and extracting out the remaining singleton

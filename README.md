@@ -18,21 +18,28 @@ You may be interested in reading my blog posts accompanying this library explain
 
 ### Guarding a two-member union and extracting out the remaining singleton
 
-```hs
+```purs
 type TestUnion = H.JSUnion
-( name :: String
-, count :: Int
-)
+  ( name :: String
+  , count :: Int
+  )
 
 nameP = SProxy :: SProxy "name"
 countP = SProxy :: SProxy "count"
 
 countGuard :: H.UnsafeGuardFor "count" Int
 countGuard =
-H.UnsafeGuardFor
-$ isRight
-<<< runExcept
-<<< readInt
+  H.UnsafeGuardFor
+      $ isRight
+    <<< runExcept
+    <<< readInt
+
+nameGuard :: H.UnsafeGuardFor "name" String
+nameGuard =
+  H.UnsafeGuardFor
+     $ isRight
+   <<< runExcept
+   <<< readString
 
 -- ...
     T.test "unsafeGuardMember 1" do
@@ -56,7 +63,7 @@ $ isRight
         (union :: TestUnion) = H.fromMember countP 1
         match = H.matchJSUnion
           { count: Tuple countGuard show
-          , name: Tuple nameGuard id
+          , name: Tuple nameGuard identity
           }
           union
       case match of
@@ -70,7 +77,7 @@ $ isRight
         (union :: TestUnion) = unsafeCoerce { crap: "some bullshit from JS" }
         match = H.matchJSUnion
           { count: Tuple countGuard show
-          , name: Tuple nameGuard id
+          , name: Tuple nameGuard identity
           }
           union
       case match of
@@ -82,7 +89,7 @@ $ isRight
 
 ### Using Chalk.js properties as both functions and objects
 
-```hs
+```purs
 chalkMain :: Effect Unit
 chalkMain = do
   let

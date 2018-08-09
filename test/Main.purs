@@ -2,12 +2,11 @@ module Test.Main where
 
 import Prelude
 
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Console (log)
-import Control.Monad.Eff.Unsafe (unsafeCoerceEff)
+import Effect (Effect)
+import Effect.Console (log)
 import Control.Monad.Except (runExcept)
 import Data.Either (Either(..), isRight)
-import Data.Foreign (readInt, readString)
+import Foreign (readInt, readString)
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..))
 import Hotteok as H
@@ -39,11 +38,11 @@ nameGuard =
    <<< runExcept
    <<< readString
 
-main :: Eff () Unit
+main :: Effect Unit
 main = do
   chalkMain
 
-  unsafeCoerceEff $ TM.runTest do
+  TM.runTest do
 
     T.test "fromMember" do
       let (union :: TestUnion) = H.fromMember nameP "banana"
@@ -87,7 +86,7 @@ main = do
         (union :: TestUnion) = H.fromMember countP 1
         match = H.matchJSUnion
           { count: Tuple countGuard show
-          , name: Tuple nameGuard id
+          , name: Tuple nameGuard identity
           }
           union
       case match of
@@ -101,7 +100,7 @@ main = do
         (union :: TestUnion) = unsafeCoerce { crap: "some bullshit from JS" }
         match = H.matchJSUnion
           { count: Tuple countGuard show
-          , name: Tuple nameGuard id
+          , name: Tuple nameGuard identity
           }
           union
       case match of
@@ -111,8 +110,8 @@ main = do
           T.success
 
 
-chalkMain :: Eff () Unit
-chalkMain = unsafeCoerceEff do
+chalkMain :: Effect Unit
+chalkMain = do
   let
     fnP = SProxy :: SProxy "fn"
     objP = SProxy :: SProxy "obj"

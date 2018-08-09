@@ -3,10 +3,11 @@ module Hotteok where
 import Prelude
 
 import Data.Either (Either(..))
-import Data.Foreign (Foreign, toForeign)
 import Data.Maybe (Maybe(..))
-import Data.Record as Record
 import Data.Tuple (Tuple(..))
+import Foreign (Foreign, unsafeToForeign)
+import Prim.Row as Row
+import Record as Record
 import Type.Prelude (class IsSymbol, class RowToList, RLProxy(RLProxy), SProxy(SProxy))
 import Type.Row (Cons, Nil, kind RowList)
 import Unsafe.Coerce (unsafeCoerce)
@@ -18,18 +19,18 @@ newtype UnsafeGuardFor (name :: Symbol) ty =
 
 unsafeGuardMember
   :: forall name ty members' members
-   . RowCons name ty members' members
+   . Row.Cons name ty members' members
   => UnsafeGuardFor name ty
   -> JSUnion members
   -> Either (JSUnion members') ty
 unsafeGuardMember (UnsafeGuardFor check) jsUnion =
-  if check (toForeign jsUnion)
+  if check (unsafeToForeign jsUnion)
      then Right (unsafeCoerce jsUnion)
      else Left (unsafeCoerce jsUnion)
 
 unsafeCoerceMember
   :: forall name ty members' members
-   . RowCons name ty members' members
+   . Row.Cons name ty members' members
   => SProxy name
   -> JSUnion members
   -> ty
@@ -46,7 +47,7 @@ unsafeExtractSingleton =
 
 fromMember
   :: forall name ty members' members
-   . RowCons name ty members' members
+   . Row.Cons name ty members' members
   => SProxy name
   -> ty
   -> JSUnion members
@@ -72,8 +73,8 @@ instance matchMembersNil :: MatchMembers Nil members pairs result where
 
 instance matchMembersCons ::
   ( IsSymbol name
-  , RowCons name ty members' members
-  , RowCons name (Tuple (UnsafeGuardFor name ty) (ty -> result)) pairs' pairs
+  , Row.Cons name ty members' members
+  , Row.Cons name (Tuple (UnsafeGuardFor name ty) (ty -> result)) pairs' pairs
   , MatchMembers tail members pairs result
   ) => MatchMembers (Cons name ty tail) members pairs result where
   matchMembers _ pairs union =

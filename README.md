@@ -83,8 +83,8 @@ $ isRight
 ### Using Chalk.js properties as both functions and objects
 
 ```hs
-chalkMain :: Eff () Unit
-chalkMain = unsafeCoerceEff do
+chalkMain :: Effect Unit
+chalkMain = do
   let
     fnP = SProxy :: SProxy "fn"
     objP = SProxy :: SProxy "obj"
@@ -99,5 +99,5 @@ foreign import chalk
             ( fn :: String -> String
             , obj :: { bgYellow :: String -> String }
             )
-     } 
+     }
 ```
